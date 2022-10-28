@@ -1,0 +1,20 @@
+---
+apt_pkgs:
+  - apt-utils
+  - ca-certificates
+  - bash-completion
+  - python3
+  - python3-pip
+  - python3-apt
+  - gnupg
+  - curl
+  - cron
+  - zip
+  - unzip
+  - htop
+  - vim
+  - net-tools
+  - dirmngr
+  - language-pack-pt
+  - nginx
+  - python3-certbot-nginx
