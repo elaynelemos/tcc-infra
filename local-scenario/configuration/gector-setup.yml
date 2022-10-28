@@ -8,10 +8,6 @@
         pkg: '{{ apt_pkgs }}'
         cache_valid_time: 3600
         update_cache: true
-    
-    - name: install pip dependencies
-      ansible.builtin.pip:
-        name: Flask==2.2.2
 
   roles:
     - name: manala.roles.ngrok
