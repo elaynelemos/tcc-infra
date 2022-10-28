@@ -1,0 +1,12 @@
+roles/
+ansible_collections/
+.virtualenv
+.venv
+.cache
+*.zip
+roles/
+ansible_collections/
+.virtualenv
+.venv
+.cache
+*.zip
