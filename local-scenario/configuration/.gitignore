@@ -6,6 +6,7 @@ ansible_collections/
 *.zip
 roles/
 ansible_collections/
+.vagrant/
 .virtualenv
 .venv
 .cache
