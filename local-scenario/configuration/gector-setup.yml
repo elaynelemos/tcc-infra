@@ -1,5 +1,5 @@
 ---
-- hosts: local
+- hosts: tcc-gector-api
   become: yes
   vars_files:
     - vars/main.yml
@@ -18,3 +18,10 @@
     - name: configure ngrok
       ansible.builtin.command:
         cmd: ngrok config add-authtoken {{ vault_ngrok_token }}
+
+    - name: Clone gector-api
+      ansible.builtin.git:
+        repo: https://github.com/elaynelemos/gector-api.git
+        dest: /var/www/gector-api
+        single_branch: yes
+        version: master
