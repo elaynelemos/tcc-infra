@@ -7,8 +7,8 @@
   pre_tasks:
     - name: add python repository from PPA
       ansible.builtin.apt_repository:
-      repo: ppa:deadsnakes/ppa
-      state: present
+        repo: ppa:deadsnakes/ppa
+        state: present
 
     - name: install apt dependencies
       ansible.builtin.apt:
