@@ -5,3 +5,10 @@ collections:
   - name: ansible.posix
     version: 1.3.0
   - name: manala.roles
+    version: 2.1.0
+
+roles:
+  - name: cloudalchemy.node_exporter
+    src: https://github.com/4linux/ansible-node-exporter.git
+    scm: git
+    version: cddc25fd8f8e8bebb3aff12e1a71ac5ddf950b59
