@@ -44,7 +44,7 @@
     - name: append user vagrant www-data group
       ansible.builtin.user:
         name: vagrant
-        groups: www-data
+        groups: &app_user www-data
         append: yes
 
     - name: create python virtual environment
@@ -52,7 +52,15 @@
         cmd: python3.7 -m venv /var/www/gector-api/venv
         creates: /var/www/gector-api/venv
 
-    - name: ensures application directory permissions
+    - name: ensures application files mode
       command:
         cmd: find . -type f -exec chmod 664 {} + -o -type d -exec chmod 2775 {} +
         chdir: *app_dir
+
+    - name: ensures application user permissions
+      ansible.builtin.file:
+        path: *app_dir
+        state: directory
+        recurse: yes
+        owner: *app_user
+        group: *app_user
