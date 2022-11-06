@@ -5,11 +5,23 @@
     - vars/main.yml
 
   pre_tasks:
+    - name: add python repository from PPA
+      ansible.builtin.apt_repository:
+      repo: ppa:deadsnakes/ppa
+      state: present
+
     - name: install apt dependencies
       ansible.builtin.apt:
         pkg: '{{ apt_pkgs }}'
         cache_valid_time: 3600
         update_cache: true
+
+    - name: upgrade python dependencies
+      ansible.builtin.pip:
+        name:
+          - pip
+          - setuptools
+        extra_args: --upgrade
 
   roles:
     - name: manala.roles.ngrok
@@ -18,10 +30,29 @@
     - name: configure ngrok
       ansible.builtin.command:
         cmd: ngrok config add-authtoken {{ vault_ngrok_token }}
+      become_user: vagrant
 
-    - name: Clone gector-api
+    - name: clone gector-api
       ansible.builtin.git:
         repo: https://github.com/elaynelemos/gector-api.git
-        dest: /var/www/gector-api
-        single_branch: yes
+        dest: &app_dir /var/www/gector-api
+        separate_git_dir: /srv/gector-api.git
         version: master
+        update: yes
+        single_branch: yes
+
+    - name: append user vagrant www-data group
+      ansible.builtin.user:
+        name: vagrant
+        groups: www-data
+        append: yes
+
+    - name: create python virtual environment
+      command:
+        cmd: python3.7 -m venv /var/www/gector-api/venv
+        creates: /var/www/gector-api/venv
+
+    - name: ensures application directory permissions
+      command:
+        cmd: find . -type f -exec chmod 664 {} + -o -type d -exec chmod 2775 {} +
+        chdir: *app_dir
