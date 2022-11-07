@@ -18,6 +18,7 @@
 
     - name: upgrade python dependencies
       ansible.builtin.pip:
+        virtualenv_python: python3.7
         name:
           - pip
           - setuptools

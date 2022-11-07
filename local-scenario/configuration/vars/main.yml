@@ -13,6 +13,7 @@ apt_pkgs:
   - apt-utils
   - ca-certificates
   - bash-completion
+  - python3-pip
   - python3.7-dev
   - python3.7-venv
   - gnupg
