@@ -11,3 +11,4 @@ ansible_collections/
 .venv
 .cache
 *.zip
+*.log
