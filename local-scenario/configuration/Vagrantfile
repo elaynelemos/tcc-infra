@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
       debian.vm.hostname = 'tcc-gector-api'
 
       config.vm.provider "virtualbox" do |vb|
-          vb.memory = "7000"
+          vb.memory = "7500"
           vb.cpus = "4"
       end
 
