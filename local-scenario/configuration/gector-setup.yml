@@ -53,7 +53,6 @@
         version: master
         update: yes
         single_branch: yes
-      become_user: vagrant
 
     - name: append user vagrant www-data group
       ansible.builtin.user:
@@ -78,5 +77,5 @@
         path: *app_dir
         state: directory
         recurse: yes
-        owner: vagrant
+        owner: *app_user
         group: *app_user
