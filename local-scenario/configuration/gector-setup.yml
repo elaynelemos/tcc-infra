@@ -4,11 +4,25 @@
   vars_files:
     - vars/main.yml
 
+  handlers:
+    - name: restart cron
+      ansible.builtin.service:
+        name: cron
+        state: restarted
+
   pre_tasks:
     - name: add python repository from PPA
       ansible.builtin.apt_repository:
         repo: ppa:deadsnakes/ppa
         state: present
+
+    - name: Set timezone to America/Recife
+      community.general.timezone:
+        name: America/Recife
+      notify: restart cron
+      tags:
+        - cron
+        - init
 
     - name: install apt dependencies
       ansible.builtin.apt:
