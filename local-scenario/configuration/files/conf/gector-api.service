@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve gector-api
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/gector-api
+Environment="PATH=/var/www/gector-api/.venv/bin"
+ExecStart=/var/www/gector-api/.venv/bin/gunicorn --timeout=300 --workers=9 --threads=4 --worker-connections=2048 --bind 0.0.0.0:8500 wsgi:app
+
+[Install]
+WantedBy=multi-user.target
