@@ -20,9 +20,6 @@
       community.general.timezone:
         name: America/Recife
       notify: restart cron
-      tags:
-        - cron
-        - init
 
     - name: install apt dependencies
       ansible.builtin.apt:
@@ -56,6 +53,7 @@
         version: master
         update: yes
         single_branch: yes
+      become_user: vagrant
 
     - name: append user vagrant www-data group
       ansible.builtin.user:
@@ -63,10 +61,10 @@
         groups: &app_user www-data
         append: yes
 
-    # - name: create python virtual environment
-    #   command:
-    #     cmd: python3.7 -m venv /var/www/gector-api/.venv
-    #     creates: /var/www/gector-api/.venv
+    - name: create python virtual environment
+      command:
+        cmd: python3.7 -m venv /var/www/gector-api/.venv
+        creates: /var/www/gector-api/.venv
 
     - name: install python dependencies at the virtualenv
       ansible.builtin.pip:
@@ -75,15 +73,10 @@
         virtualenv: .venv
         virtualenv_command: python3.7 -m venv
 
-    - name: ensures application files mode
-      command:
-        cmd: find . -type f -exec chmod 664 {} + -o -type d -exec chmod 2775 {} +
-        chdir: *app_dir
-
     - name: ensures application user permissions
       ansible.builtin.file:
         path: *app_dir
         state: directory
         recurse: yes
-        owner: *app_user
+        owner: vagrant
         group: *app_user
