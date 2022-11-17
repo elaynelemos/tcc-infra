@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 locals {
-  any_host = ["0.0.0.0/0"]
+  any_host           = ["0.0.0.0/0"]
   node_exporter_port = "9100"
 }
 
@@ -41,7 +41,7 @@ resource "aws_instance" "vm" {
   vpc_security_group_ids = [aws_security_group.firewall.id]
 
   tags = {
-    Name = var.name
+    Name    = var.name
     Project = "tcc-elayne"
   }
 }
