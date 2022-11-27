@@ -1,0 +1,12 @@
+[Unit]
+Description=Tunnel to expose gector-api
+After=network.target
+
+[Service]
+User=vagrant
+Group=vagrant
+WorkingDirectory=/home/vagrant
+ExecStart=/usr/local/bin/pagekite 80 gecapitest.pagekite.me
+
+[Install]
+WantedBy=multi-user.target
