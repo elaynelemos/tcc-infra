@@ -1,12 +1,12 @@
 [Unit]
-Description=Tunnel to expose node exporter metrics
+Description=Tunnel to expose node-exporter metrics
 After=network.target
 
 [Service]
-User=root
-Group=root
-WorkingDirectory=/root
-ExecStart=/usr/local/bin/ngrok_custom_start 9100 /home/vagrant/.config/ngrok/ngrok.yml
+User=vagrant
+Group=vagrant
+WorkingDirectory=/home/vagrant
+ExecStart=/usr/local/bin/pagekite 9100 node.gecapitest.pagekite.me
 
 [Install]
 WantedBy=multi-user.target
