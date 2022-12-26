@@ -80,14 +80,23 @@
         owner: *app_user
         group: *app_user
 
+    - name: copy script to download model
+      ansible.builtin.copy:
+        src: files/bin/download-bert-models.sh
+        dest: /usr/local/bin/download-bert-models
+
+    - name: download bert model
+      ansible.builtin.command:
+        cmd: download-bert-models
+
     - name: copy nginx config
       ansible.builtin.copy:
-        src: gector-api.conf
+        src: files/conf/gector-api.conf
         dest: /etc/nginx/sites-available/default
 
     - name: copy service config
       ansible.builtin.copy:
-        src: gector-api.service
+        src: files/conf/gector-api.service
         dest: /etc/systemd/system/gector-api.service
       register: service
       notify: restart gector-api
@@ -96,3 +105,17 @@
       ansible.builtin.systemd:
         daemon_reload: true
       when: service.changed
+
+
+  post_tasks:
+    - name: check api availability
+      ansible.builtin.uri:
+        url: http://192.168.100.100/correct
+        method: POST
+        status_code: 200
+        body_format: json
+        body: '{"sentence": "Hello , world .\n"}'
+      register: response
+      until: response.status == 200
+      retries: 10
+      delay: 5
