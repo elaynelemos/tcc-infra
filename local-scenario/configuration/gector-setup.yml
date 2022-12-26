@@ -16,6 +16,11 @@
         enabled: true
         state: restarted
 
+    - name: restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+
   pre_tasks:
     - name: add python repository from PPA
       ansible.builtin.apt_repository:
@@ -72,6 +77,28 @@
         virtualenv: .venv
         virtualenv_command: python3.7 -m venv
 
+    - name: download bert model
+      ansible.builtin.get_url:
+        url: https://grammarly-nlp-data-public.s3.amazonaws.com/gector/xlnet_0_gectorv2.th
+        dest: &tmp_model_file /tmp/xlnet_0_gectorv2.th
+
+    - name: ensures models directory exists
+      ansible.builtin.file:
+        path: /var/www/gector-api/models
+        state: directory
+        recurse: yes
+
+    - name: copy model file
+      ansible.builtin.copy:
+        src: *tmp_model_file
+        dest: /var/www/gector-api/models/xlnet_0_gectorv2.th
+        remote_src: yes
+
+    - name: remove temporary model file
+      ansible.builtin.file:
+        path: *tmp_model_file
+        state: absent
+
     - name: ensures application user permissions
       ansible.builtin.file:
         path: *app_dir
@@ -80,19 +107,11 @@
         owner: *app_user
         group: *app_user
 
-    - name: copy script to download model
-      ansible.builtin.copy:
-        src: files/bin/download-bert-models.sh
-        dest: /usr/local/bin/download-bert-models
-
-    - name: download bert model
-      ansible.builtin.command:
-        cmd: download-bert-models
-
     - name: copy nginx config
       ansible.builtin.copy:
         src: files/conf/gector-api.conf
         dest: /etc/nginx/sites-available/default
+      notify: restart nginx
 
     - name: copy service config
       ansible.builtin.copy:
@@ -104,7 +123,6 @@
     - name: reload systemd daemons
       ansible.builtin.systemd:
         daemon_reload: true
-      when: service.changed
 
 
   post_tasks:
