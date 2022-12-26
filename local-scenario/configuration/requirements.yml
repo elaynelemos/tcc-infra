@@ -4,8 +4,6 @@ collections:
     version: 4.5.0
   - name: ansible.posix
     version: 1.3.0
-  - name: manala.roles
-    version: 2.1.0
 
 roles:
   - name: cloudalchemy.node_exporter

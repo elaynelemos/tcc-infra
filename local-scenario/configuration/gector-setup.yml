@@ -36,15 +36,9 @@
         extra_args: --upgrade
 
   roles:
-    - name: manala.roles.ngrok
     - name: cloudalchemy.node_exporter
 
   tasks:
-    - name: configure ngrok
-      ansible.builtin.command:
-        cmd: ngrok config add-authtoken {{ vault_ngrok_token }}
-      become_user: vagrant
-
     - name: clone gector-api
       ansible.builtin.git:
         repo: https://github.com/elaynelemos/gector-api.git
