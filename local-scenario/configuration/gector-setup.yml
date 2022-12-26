@@ -10,6 +10,12 @@
         name: cron
         state: restarted
 
+    - name: restart gector-api
+      ansible.builtin.service:
+        name: gector-api
+        enabled: true
+        state: restarted
+
   pre_tasks:
     - name: add python repository from PPA
       ansible.builtin.apt_repository:
@@ -73,3 +79,20 @@
         recurse: yes
         owner: *app_user
         group: *app_user
+
+    - name: copy nginx config
+      ansible.builtin.copy:
+        src: gector-api.conf
+        dest: /etc/nginx/sites-available/default
+
+    - name: copy service config
+      ansible.builtin.copy:
+        src: gector-api.service
+        dest: /etc/systemd/system/gector-api.service
+      register: service
+      notify: restart gector-api
+
+    - name: reload systemd daemons
+      ansible.builtin.systemd:
+        daemon_reload: true
+      when: service.changed
