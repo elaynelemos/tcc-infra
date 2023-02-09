@@ -44,10 +44,17 @@
         name:
           - pip
           - setuptools
+          - wheel
         extra_args: --upgrade
 
   roles:
     - name: cloudalchemy.node_exporter
+
+    - name: oefenweb.swapfile
+      vars:
+        swapfile_size: 4G
+        swapfile_swappiness: 10
+        swapfile_vfs_cache_pressure: 50
 
   tasks:
     - name: clone gector-api
@@ -59,7 +66,7 @@
         update: yes
         single_branch: yes
 
-    - name: append user vagrant www-data group
+    - name: append user to www-data group
       ansible.builtin.user:
         name: vagrant
         groups: &app_user www-data
@@ -117,7 +124,6 @@
       ansible.builtin.copy:
         src: files/conf/gector-api.service
         dest: /etc/systemd/system/gector-api.service
-      register: service
       notify: restart gector-api
 
     - name: reload systemd daemons

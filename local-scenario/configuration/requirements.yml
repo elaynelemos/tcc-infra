@@ -10,3 +10,5 @@ roles:
     src: https://github.com/4linux/ansible-node-exporter.git
     scm: git
     version: cddc25fd8f8e8bebb3aff12e1a71ac5ddf950b59
+  - name: oefenweb.swapfile
+    version: v2.0.35
