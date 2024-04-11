@@ -13,7 +13,7 @@ Before continue make sure you have [VirtualBox](https://www.virtualbox.org/wiki/
     ```
 1. Init Ansible environment:
     ```bash
-    cd local-scenario/configuration
+    cd configuration
     ./init.sh
     source .venv/bin/activate
     ansible-galaxy install -r requirements.yml
