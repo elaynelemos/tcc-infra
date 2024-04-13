@@ -1,0 +1,27 @@
+---
+apt_pkgs:
+  - apt-utils
+  - ca-certificates
+  - bash-completion
+  - python3-pip
+  - python3.7-dev
+  - python3.7-venv
+  - gnupg
+  - curl
+  - cron
+  - zip
+  - unzip
+  - htop
+  - vim
+  - net-tools
+  - dirmngr
+  - language-pack-pt
+  - nginx
+  - libssl-dev
+  - libffi-dev
+  - apt-transport-https
+  - software-properties-common
+
+arch_mapping:  # Map ansible architecture {{ ansible_architecture }} names to Docker's architecture names
+  x86_64: amd64
+  aarch64: arm64

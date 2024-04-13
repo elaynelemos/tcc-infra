@@ -1,0 +1,12 @@
+---
+collections:
+  - name: community.general
+    version: 4.5.0
+  - name: ansible.posix
+    version: 1.3.0
+  - name: community.docker
+    version: 3.8.1
+
+roles:
+  - name: oefenweb.swapfile
+    version: v2.0.35

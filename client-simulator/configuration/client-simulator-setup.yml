@@ -1,0 +1,137 @@
+---
+- hosts: tcc-gector-api
+  become: yes
+  vars_files:
+    - vars/main.yml
+
+  handlers:
+    - name: restart cron
+      ansible.builtin.service:
+        name: cron
+        state: restarted
+
+  pre_tasks:
+    - name: add python repository from PPA
+      ansible.builtin.apt_repository:
+        repo: ppa:deadsnakes/ppa
+        state: present
+
+    - name: Set timezone to America/Recife
+      community.general.timezone:
+        name: America/Recife
+      notify: restart cron
+
+    - name: Update and upgrade all packages to the latest version
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: install apt dependencies
+      ansible.builtin.apt:
+        pkg: '{{ apt_pkgs }}'
+        cache_valid_time: 3600
+        update_cache: true
+
+    - name: upgrade python dependencies
+      ansible.builtin.pip:
+        virtualenv_python: python3.7
+        name:
+          - pip
+          - setuptools
+          - wheel
+        extra_args: --upgrade
+
+    - name: Create directory for Docker's GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker's official GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        keyring: /etc/apt/keyrings/docker.gpg
+        state: present
+
+    - name: Print architecture variables
+      ansible.builtin.debug:
+        msg: "Architecture: {{ ansible_architecture }}, Codename: {{ ansible_lsb.codename }}"
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [arch={{ arch_mapping[ansible_architecture] | default(ansible_architecture) }}
+          signed-by=/etc/apt/keyrings/docker.gpg]
+          https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+        filename: docker
+        state: present
+
+    - name: Install Docker and related packages
+      ansible.builtin.apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Add Docker group
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add user to Docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+
+    - name: Enable and start Docker services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      with_items:
+        - docker.service
+        - containerd.service
+
+  roles:
+    - name: cloudalchemy.node_exporter
+
+    - name: oefenweb.swapfile
+      vars:
+        swapfile_size: 1G
+        swapfile_swappiness: 10
+        swapfile_vfs_cache_pressure: 50
+
+  tasks:
+    - name: clone tcc-infra
+      ansible.builtin.git:
+        repo: https://github.com/elaynelemos/tcc-infra.git
+        dest: &app_dir ${HOME}/tcc-infra
+        separate_git_dir: /srv/tcc-infra.git
+        version: main
+        update: yes
+        single_branch: yes
+
+    - name: Install prometheus as docker container
+      community.docker.docker_container:
+        name: prometheus
+        image: prom/prometheus
+        state: started
+        restart: true
+        volumes:
+          - prometheus-data:/prometheus
+        ports:
+          # Publish container port 9000 as host port 8080
+          - "9090:9090"
+
+    - name: install python dependencies at the virtualenv
+      ansible.builtin.pip:
+        requirements: requirements.txt
+        chdir: *app_dir
+        virtualenv: .venv
+        virtualenv_command: python3.7 -m venv
