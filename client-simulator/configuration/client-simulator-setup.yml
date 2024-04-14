@@ -1,5 +1,5 @@
 ---
-- hosts: tcc-gector-api
+- hosts: client-simulator
   become: yes
   vars_files:
     - vars/main.yml
@@ -99,8 +99,6 @@
         - containerd.service
 
   roles:
-    - name: cloudalchemy.node_exporter
-
     - name: oefenweb.swapfile
       vars:
         swapfile_size: 1G
@@ -108,14 +106,22 @@
         swapfile_vfs_cache_pressure: 50
 
   tasks:
-    - name: clone tcc-infra
+    - name: clone gector-client-simulator
       ansible.builtin.git:
-        repo: https://github.com/elaynelemos/tcc-infra.git
-        dest: &app_dir ${HOME}/tcc-infra
-        separate_git_dir: /srv/tcc-infra.git
+        repo: https://github.com/elaynelemos/gector-client-simulator
+        dest: &app_dir "/home/{{ ansible_user }}/gector-client-simulator"
+        separate_git_dir: /srv/gector-client-simulator.git
         version: main
         update: yes
         single_branch: yes
+
+    - name: ensures application user permissions
+      ansible.builtin.file:
+        path: *app_dir
+        state: directory
+        recurse: yes
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
 
     - name: Install prometheus as docker container
       community.docker.docker_container:
@@ -135,3 +141,14 @@
         chdir: *app_dir
         virtualenv: .venv
         virtualenv_command: python3.7 -m venv
+
+  post_tasks:
+    - name: check prometheus availability
+      ansible.builtin.uri:
+        url: http://localhost:9090/metrics
+        method: GET
+        status_code: 200
+      register: response
+      until: response.status == 200
+      retries: 10
+      delay: 5
