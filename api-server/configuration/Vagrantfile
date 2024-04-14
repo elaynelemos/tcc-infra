@@ -1,8 +1,8 @@
 Vagrant.configure("2") do |config|
-  config.vm.define 'tcc-gector-api' do |debian|
+  config.vm.define 'gector-api-server' do |debian|
       config.vm.box = "bento/ubuntu-20.04"
       debian.vm.network :private_network, ip: '192.168.100.100'
-      debian.vm.hostname = 'tcc-gector-api'
+      debian.vm.hostname = 'gector-api-server'
 
       config.vm.network :forwarded_port, guest: 22, host: 2200, id: "ssh", disabled: true
       config.vm.network :forwarded_port, guest: 22, host: 2222, id: "ssh", disabled: true

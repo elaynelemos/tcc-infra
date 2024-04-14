@@ -1,5 +1,5 @@
 ---
-- hosts: tcc-gector-api
+- hosts: gector-api-server
   become: yes
   vars_files:
     - vars/main.yml
@@ -68,7 +68,7 @@
 
     - name: append user to www-data group
       ansible.builtin.user:
-        name: vagrant
+        name: '{{ ansible_user }}'
         groups: &app_user www-data
         append: yes
 
@@ -134,7 +134,7 @@
   post_tasks:
     - name: check api availability
       ansible.builtin.uri:
-        url: http://192.168.100.100/correct
+        url: http://localhost/correct
         method: POST
         status_code: 200
         body_format: json
