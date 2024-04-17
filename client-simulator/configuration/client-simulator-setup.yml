@@ -123,13 +123,26 @@
         owner: '{{ ansible_user }}'
         group: '{{ ansible_user }}'
 
+    - name: ensures prometheus config directory exists
+      ansible.builtin.file:
+        path: /etc/prometheus
+        state: directory
+        recurse: yes
+
+    - name: copy prometheus config
+      ansible.builtin.copy:
+        src: files/prometheus/prometheus.yaml
+        dest: /etc/prometheus
+
     - name: Install prometheus as docker container
       community.docker.docker_container:
         name: prometheus
         image: prom/prometheus
         state: started
         restart: true
+        restart_policy: always
         volumes:
+          - /etc/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
           - prometheus-data:/prometheus
         ports:
           # Publish container port 9000 as host port 8080
