@@ -32,7 +32,7 @@ resource "google_compute_instance" "gector_api_server" {
   enable_display      = false
 
   labels = {
-    goog-ec-src = "vm_add-tf"
+    project = "erll-research-gector"
   }
 
   machine_type = "n2d-custom-4-8192"
