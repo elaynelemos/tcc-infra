@@ -35,3 +35,10 @@ scrape_configs:
 
     static_configs:
       - targets: ["192.168.100.100:9100"]
+
+  - job_name: "n2d-custom-4-8192"
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["35.196.237.138:9100"]
