@@ -41,8 +41,20 @@ scrape_configs:
   #   static_configs:
   #     - targets: ["34.74.45.50:9100"]
 
-  - job_name: "n2d-custom-8-16384"
+  # - job_name: "n2d-custom-8-16384"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["104.196.141.119:9100"]
+
+  # - job_name: "n2-custom-8-16384"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["104.196.141.119:9100"]
+
+  - job_name: "c3-highcpu-4"
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
     static_configs:
-      - targets: ["104.196.141.119:9100"]
+      - targets: ["34.148.44.205:9100"]
