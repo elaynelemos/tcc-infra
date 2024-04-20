@@ -16,7 +16,7 @@ provider "google" {
 resource "google_compute_instance" "gector_api_server" {
   boot_disk {
     auto_delete = true
-    device_name = "gector-api-server-n2d-4-custom-8192"
+    device_name = "gector-api-server-n2d-custom-4-8192"
 
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b"
@@ -42,7 +42,7 @@ resource "google_compute_instance" "gector_api_server" {
   }
 
   min_cpu_platform = "AMD Milan"
-  name             = "gector-api-server-n2d-4-custom-8192"
+  name             = "gector-api-server-n2d-custom-4-8192"
 
   network_interface {
     access_config {
