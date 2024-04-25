@@ -59,8 +59,20 @@ scrape_configs:
   #   static_configs:
   #     - targets: ["34.148.44.205:9100"]
 
-  - job_name: "c3-highcpu-8"
+  # - job_name: "c3-highcpu-8"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["34.73.53.229:9100"]
+
+  # - job_name: "standard-b4als-v2"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["4.255.32.162:9100"]
+
+  - job_name: "standard-b8als-v2"
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
     static_configs:
-      - targets: ["34.73.53.229:9100"]
+      - targets: ["52.224.220.223:9100"]
