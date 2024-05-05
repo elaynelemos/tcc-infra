@@ -77,8 +77,38 @@ scrape_configs:
   #   static_configs:
   #     - targets: ["52.224.220.223:9100"]
 
-  - job_name: "standard-d8lds-v5"
+  # - job_name: "standard-d8lds-v5"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["52.190.22.62:9100"]
+
+  # - job_name: "standard-f4s-v2"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["52.186.65.143:9100"]
+
+  # - job_name: "standard-f8s-v2"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["52.168.51.220:9100"]
+
+  # - job_name: "standard-nc4as-t4-v3"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["172.191.20.207:9100"]
+
+  # - job_name: "standard-nc8as-t4-v3"
+  #   # metrics_path defaults to '/metrics'
+  #   # scheme defaults to 'http'.
+  #   static_configs:
+  #     - targets: ["13.92.252.243:9100"]
+
+  - job_name: "n1-standard-4"
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
     static_configs:
-      - targets: ["52.190.22.62:9100"]
+      - targets: ["34.125.36.156:9100"]

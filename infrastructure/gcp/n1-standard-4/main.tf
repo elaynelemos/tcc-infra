@@ -10,17 +10,17 @@ terraform {
 
 provider "google" {
   project     = "erll-research"
-  region      = "us-central1"
+  region      = "us-west4"
 }
 
 resource "google_compute_instance" "gector_api_server" {
   boot_disk {
     auto_delete = true
-    device_name = "gector-api-server-custom-4-8192"
+    device_name = "gector-api-server-n1-standard-4"
 
     initialize_params {
       image = "projects/ubuntu-os-cloud/global/images/ubuntu-2004-focal-v20240307b"
-      size  = 120
+      size  = 100
       type  = "pd-balanced"
     }
 
@@ -37,11 +37,11 @@ resource "google_compute_instance" "gector_api_server" {
 
   guest_accelerator {
     count = 1
-    type  = "projects/erll-research/zones/us-central1-c/acceleratorTypes/nvidia-tesla-p4"
+    type  = "projects/erll-research/zones/us-west4-b/acceleratorTypes/nvidia-tesla-t4"
   }
 
-  machine_type = "custom-4-8192"
-  name         = "gector-api-server-custom-4-8192"
+  machine_type = "n1-standard-4"
+  name         = "gector-api-server-n1-standard-4"
 
   metadata = {
     ssh-keys = "elaynelemos:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC9Qd2Qt2cve8S18G9MfT36kUFjq3ORmw7SAr90xm2P8 elaynelemos@personal"
@@ -54,7 +54,7 @@ resource "google_compute_instance" "gector_api_server" {
 
     queue_count = 0
     stack_type  = "IPV4_ONLY"
-    subnetwork  = "projects/erll-research/regions/us-central1/subnetworks/default"
+    subnetwork  = "projects/erll-research/regions/us-west4/subnetworks/default"
   }
 
   scheduling {
@@ -76,5 +76,5 @@ resource "google_compute_instance" "gector_api_server" {
   }
 
   tags = ["http-server", "https-server"]
-  zone = "us-central1-c"
+  zone = "us-west4-b"
 }
